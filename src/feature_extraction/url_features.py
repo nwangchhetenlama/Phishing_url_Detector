@@ -75,8 +75,3 @@ def extract_url_features(url):
 
     }
 
-url = "https://www.paypal-login-security123.com/verify/account"
-
-features = extract_url_features(url)
-
-print(features)

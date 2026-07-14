@@ -5,12 +5,21 @@ from urllib.parse import urlparse
 
 #function to check whether domain appear in webpage title
 
-def extract_domain_in_title(soup,domain):
+def extract_domain_in_title(soup, domain):
     try:
-        title=soup.title.text.lower()
-        return int(domain.lower() in title)
-    
-    except:
+        title = soup.title.text.lower()
+
+        domain_name = (
+            urlparse("https://" + domain).hostname
+            .replace("www.", "")
+            .split(".")[0]
+            .lower()
+        )
+
+        return int(domain_name in title)
+
+    except Exception as e:
+        print(e)
         return 0
 
 # Function to count phishing keywords
@@ -33,7 +42,7 @@ def extract_phish_hints(soup):
     "reward",
     "shared document",
     "attachment",
-    "dear user"
+    "dear user",
     "verify",
     "account",
     "bank",
@@ -67,18 +76,18 @@ def extract_hyperlink_features(soup,domain):
         
         # internal links -> google.com/about
 
-        elif domain in href:
+        elif href.startswith("/") or domain in href:
             internal+=1
 
         #external
         else:
             external+=1
         
-        ratio_internal=internal/total_links
-        ratio_external = external / total_links
+    ratio_internal=internal/total_links
+    ratio_external = external / total_links
 
-        safe_anchor = safe / total_links
-        return (ratio_external,ratio_internal,safe_anchor)
+    safe_anchor = safe / total_links
+    return (ratio_external,ratio_internal,safe_anchor)
     
 
 # Function to calculate external redirects
@@ -94,8 +103,9 @@ def extract_redirection_ratio(response,domain):
     for redirect in redirects:
         redirect_domain=(urlparse(redirect.url).netloc)
     
-    if redirect_domain!=domain:
-        external_redirects+=1
+        if redirect_domain.replace("www.", "") != domain.replace("www.", ""):
+
+            external_redirects+=1
     
     return (external_redirects/len(redirects))
 
@@ -117,6 +127,7 @@ def extract_html_features(url):
         )
 
         soup=BeautifulSoup(response.text,"html.parser")
+
         ratio_extHyperlinks, \
         ratio_intHyperlinks, \
         safe_anchor = \
@@ -168,3 +179,6 @@ def extract_html_features(url):
             "ratio_extRedirection": 0,
             "domain_in_title": 0
         }
+
+
+
