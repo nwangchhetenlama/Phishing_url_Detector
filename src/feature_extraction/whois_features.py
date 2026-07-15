@@ -19,6 +19,6 @@ def extract_domain_age(domain):
         age_days=(today-creation_date).days
         return age_days
 
-    except Exception as e:
-        print("WHOIS Error:",e)
+    except Exception:
+        
         return 0
