@@ -15,6 +15,11 @@ def predict_url(url):
     features=extract_features(url)
 
     X=pd.DataFrame([features])
+    X=X[model.feature_names_in_]
     prediction=model.predict(X)[0]
- 
-    return prediction
+    probability=model.predict_proba(X)[0]
+    
+    return {
+        "prediction":"Phishing" if prediction==1 else "Legitimate",
+        "confidence":max(probability)
+    }
