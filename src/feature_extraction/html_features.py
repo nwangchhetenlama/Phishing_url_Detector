@@ -27,26 +27,16 @@ def extract_domain_in_title(soup, domain):
 def extract_phish_hints(soup):
 
     phishing_words = [
-    
-    "urgent",
-    "action required",
-    "suspended",
-    "security alert",
-    "suspicious activity",
-    "verify account",
-    "invoice",
-    "payment failure",
-    "refund",  
-    "winner",
-    "claim now",
-    "reward",
-    "shared document",
-    "attachment",
-    "dear user",
-    "verify",
-    "account",
-    "bank",
-    "confirm"
+        "action required",
+        "account suspended",
+        "security alert",
+        "suspicious activity",
+        "verify your account",
+        "confirm your identity",
+        "payment failure",
+        "password expired",
+        "unauthorized login attempt",
+        "claim your reward"
     ]
     text=soup.get_text().lower()
 
@@ -86,7 +76,7 @@ def extract_hyperlink_features(soup,domain):
     ratio_internal=internal/total_links
     ratio_external = external / total_links
 
-    safe_anchor = safe / total_links
+    safe_anchor = (safe / total_links)*100
     return (ratio_external,ratio_internal,safe_anchor)
     
 
