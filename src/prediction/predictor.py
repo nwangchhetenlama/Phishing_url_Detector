@@ -9,7 +9,7 @@ sys.path.append(
 
 from src.feature_extraction.feature_pipeline import extract_features
 
-model=joblib.load('./random_forest_phishing.pkl')
+model=joblib.load('models/random_forest_phishing.pkl')
 
 def predict_url(url):
     features=extract_features(url)
