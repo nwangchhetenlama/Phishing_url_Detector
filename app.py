@@ -11,7 +11,12 @@ url=st.text_input("Enter URL to analyze:")
 if st.button("Analyze"):
 
     if url:
+
         result=predict_url(url)
+        st.subheader("Analyzed URL:")
+        st.code(url)
+
+        
 
         if result['prediction']=='Phishing':
             st.error(
@@ -20,9 +25,16 @@ if st.button("Analyze"):
         else:
             st.success(f"✅ {result['prediction']}")
 
-        st.write(
-            f"Confidence:{result['confidence']:.2%}"
-        )
+        col1,col2=st.columns(2)
+        with col1:
+            st.metric(
+                "Confidence",f"{result['confidence']:.2%}"
+            )
+        with col2:
+            st.metric(
+                "Risk Level",
+                "High" if result['prediction']=='Phishing' else "Low"
+            )
 
         st.subheader("Extracted Features")
         feature_df=pd.DataFrame(
