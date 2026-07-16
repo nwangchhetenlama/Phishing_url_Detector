@@ -21,5 +21,7 @@ def predict_url(url):
     
     return {
         "prediction":"Phishing" if prediction==1 else "Legitimate",
-        "confidence":max(probability)
+        "confidence":max(probability),
+        "features":features
     }
+

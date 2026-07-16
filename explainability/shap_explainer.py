@@ -4,7 +4,7 @@ import pandas as pd
 
 from src.feature_extraction.feature_pipeline import extract_features
 
-model=joblib.load("random_forest_phishing.pkl")
+model=joblib.load("models/random_forest_phishing.pkl")
 
 explainer=shap.TreeExplainer(model)
 
