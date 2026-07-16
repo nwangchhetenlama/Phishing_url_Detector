@@ -32,22 +32,19 @@ if st.button("Analyze"):
         st.dataframe(feature_df,use_container_width=True)
         
         st.subheader("Why did the model make this decision?")
-        explainer,shap_values,X=explain_url(url)
+        shap_values,X,explainer=explain_url(url)
 
         fig,ax=plt.subplots()
-        st.write(type(shap_values))
-        st.write(shap_values.shape)
-        st.write(type(shap_values.values))
-        st.write(shap_values.values.shape)
-        # shap.plots.waterfall(
-        #     shap_values[0,:,1],
-        #     show=False
-        #     )
-        # st.pyplot(
-        #     plt.gcf()
-        # )
+
+        shap.plots.waterfall(
+            shap_values[0,:,1],
+            show=False
+            )
+        st.pyplot(
+            plt.gcf()
+        )
         
-        # plt.clf()
+        plt.clf()
         
 
     else:
