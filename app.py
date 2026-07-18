@@ -5,6 +5,9 @@ import matplotlib.pyplot as plt
 import shap
 from explainability.shap_explainer import explain_url
 
+if "history" not in st.session_state:
+    st.session_state.history=[]
+
 st.title("Phishing URL Detector")
 url=st.text_input("Enter URL to analyze:")
 
@@ -13,6 +16,13 @@ if st.button("Analyze"):
     if url:
 
         result=predict_url(url)
+
+        st.session_state.history.append({
+            "url":url,
+            "prediction": result["prediction"],
+            "confidence": result["confidence"]
+
+        })
         st.subheader("Analyzed URL:")
         st.code(url)
 
@@ -57,10 +67,15 @@ if st.button("Analyze"):
         )
         
         plt.clf()
+
+
         
 
     else:
         st.warning("Please enter a URL.")
     
-    
+st.subheader("Prediction History")
+if st.session_state.history:
+    st.table(st.session_state.history)
+  
 
