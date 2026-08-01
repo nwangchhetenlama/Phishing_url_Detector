@@ -10,3 +10,5 @@ shap
 matplotlib
 streamlit
 lxml
+fastapi
+uvicorn
