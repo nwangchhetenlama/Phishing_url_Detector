@@ -57,7 +57,7 @@ pip install -r requirements.txt
 ## Running the Streamlit app
 
 ```bash
-streamlit run app.py
+https://phishingurldetector-nclrdezrccba2cf8dws3pi.streamlit.app/
 ```
 
 ![alt text](assets/image1.png)
@@ -67,7 +67,8 @@ streamlit run app.py
 ## Running the FastAPI backend
 
 ```bash
-uvicorn src.api.main:app --reload
+python -m uvicorn src.api.main:app --reload
+http://127.0.0.1:8000/docs
 ```
 
 **Server startup:**
