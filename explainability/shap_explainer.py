@@ -1,12 +1,18 @@
-import shap
-import joblib
+
 import pandas as pd
 
 from src.feature_extraction.feature_pipeline import extract_features
+from pathlib import Path
+import joblib
+import shap
 
-model=joblib.load("models/random_forest_phishing.pkl")
+BASE_DIR = Path(__file__).resolve().parents[1]
 
-explainer=shap.TreeExplainer(model)
+MODEL_PATH = BASE_DIR / "models" / "random_forest_phishing.pkl"
+
+model = joblib.load(MODEL_PATH)
+
+explainer = shap.TreeExplainer(model)
 
 def explain_url(url):
 
