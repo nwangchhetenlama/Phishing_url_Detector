@@ -1,58 +1,137 @@
-# Phishing URL Detector
+Phishing URL Detector
 
-A machine learning system that detects phishing URLs using URL structure, HTML content, and WHOIS domain data. Includes a Streamlit web app, a FastAPI backend, and SHAP-based explainability.
+A machine learning system that detects phishing URLs using URL structure, HTML content, and WHOIS domain data. Includes a Streamlit web app, a FastAPI backend, multiple machine learning models, and SHAP-based explainability.
 
-## Features
-
-- **URL-based features**: length, digit ratio, token count, character repetition, hostname length
-- **HTML-based features**: phishing keyword detection, internal/external link ratios, redirect analysis
-- **WHOIS-based features**: domain age
-- **Model**: Random Forest Classifier (~92% accuracy, ~0.92 F1 score)
-- **Explainability**: SHAP waterfall plots showing why the model made each decision
-- **Streamlit app**: interactive UI for single-URL analysis
-- **FastAPI backend**: REST API for programmatic predictions
-
-## Project Structure
-
-```
+Features
+URL-based features: length, digit ratio, token count, character repetition, hostname length
+HTML-based features: phishing keyword detection, internal/external link ratios, redirect analysis
+WHOIS-based features: domain age
+Machine Learning Models:
+Random Forest Classifier
+Logistic Regression with feature engineering and preprocessing
+K-Nearest Neighbors (KNN) with preprocessing
+Model Selection: Select Random Forest, Logistic Regression, or KNN from the Streamlit interface
+Model Comparison: Compare predictions and confidence scores from the available models
+Explainability: SHAP waterfall plots for Random Forest predictions
+Streamlit app: Interactive UI for single-URL analysis
+FastAPI backend: REST API using Random Forest only for programmatic predictions
+Project Structure
 ├── app.py                          # Streamlit UI
 ├── src/
 │   ├── api/                        # FastAPI backend
 │   ├── feature_extraction/         # URL, HTML, WHOIS feature extractors
 │   └── prediction/                 # Model loading and prediction logic
 ├── explainability/                 # SHAP explainer
-├── models/                         # Trained model (.pkl)
+├── models/
+│   ├── random_forest_phishing.pkl  # Random Forest model
+│   ├── pipe_lr.pkl                 # Logistic Regression pipeline
+│   └── pipe_knn.pkl                # KNN pipeline
 ├── data/                           # Raw and processed datasets
 ├── notebooks/                      # EDA and model training notebooks
 └── requirements.txt
-```
+Machine Learning Models
+Random Forest
 
-## Setup
+Random Forest is the primary model used in the project.
 
-```bash
+It is used for:
+
+Streamlit predictions
+SHAP explainability
+FastAPI /predict endpoint
+Logistic Regression
+
+Logistic Regression is implemented with feature preprocessing and regularization.
+
+The preprocessing pipeline includes:
+
+Missing Value Handling
+        ↓
+SimpleImputer
+        ↓
+StandardScaler
+        ↓
+Logistic Regression
+
+The fitted pipeline is saved as:
+
+models/pipe_lr.pkl
+
+Logistic Regression is available for prediction and model comparison in the Streamlit application.
+
+K-Nearest Neighbors (KNN)
+
+KNN is implemented using a preprocessing pipeline with feature scaling.
+
+The fitted pipeline is saved as:
+
+models/pipe_knn.pkl
+
+KNN is available for prediction and model comparison in the Streamlit application.
+
+Model Selection
+
+The Streamlit application allows the user to choose between:
+
+Random Forest
+Logistic Regression
+KNN
+
+The selected model provides:
+
+Prediction
+Confidence score
+Risk level
+
+This allows the performance and predictions of different machine learning approaches to be compared on the same URL.
+
+Explainability
+
+SHAP is currently used to explain the Random Forest model.
+
+The application generates a SHAP waterfall plot showing how individual features contributed to the prediction.
+
+URL
+ ↓
+Feature Extraction
+ ↓
+Random Forest
+ ↓
+Prediction
+ ↓
+SHAP
+ ↓
+Feature Contributions
+
+Logistic Regression and KNN predictions are currently displayed without the Random Forest SHAP waterfall explanation.
+
+Setup
 git clone <repo-url>
 cd Phishing_url_Detector
 python -m venv .venv
 .venv\Scripts\activate        # Windows
 pip install -r requirements.txt
-```
+Exploratory Data Analysis
+Loaded the phishing dataset into a Pandas DataFrame and inspected row/column counts, data types, missing values, and duplicates.
+Analyzed class distribution, feature value distribution, and correlation between features.
+Identified which features are strong indicators of phishing behavior.
+Performed feature preprocessing for Logistic Regression and KNN.
+Applied feature scaling where required by the models.
+Performed outlier analysis during the feature engineering process.
 
-## Exploratory Data Analysis
+Key observations:
 
-- Loaded the phishing dataset into a Pandas DataFrame and inspected row/column counts, data types, missing values, and duplicates.
-- Analyzed class distribution, feature value distribution, and correlation between features.
-- Identified which features are strong indicators of phishing behavior.
+The dataset contains both legitimate and phishing websites.
+Several URL-based features show strong correlation with phishing behavior.
+Some features can be extracted directly from URLs, while others require HTML content or external services such as WHOIS.
 
-**Key observations:**
-- The dataset contains both legitimate and phishing websites.
-- Several URL-based features show strong correlation with phishing behavior.
-- Some features can be extracted directly from URLs, while others require HTML content or external services such as WHOIS and SSL information.
+Feature categories:
 
-**Feature categories:**
+URL-based (extracted directly from the URL): URL length, number of dots, number of hyphens, presence of IP address, number of subdomains, presence of special characters.
 
-*URL-based* (extracted directly from the URL): URL length, number of dots, number of hyphens, presence of IP address, number of subdomains, presence of special characters.
+HTML-based (require webpage scraping): external resource ratio, number of links, forms and redirects, favicon source.
 
-*HTML-based* (require webpage scraping): external resource ratio, number of links, forms and redirects, favicon source.
+WHOIS-based: domain age.
 
 ## Running the Streamlit app
 
@@ -99,7 +178,7 @@ http://127.0.0.1:8000/docs
 | Precision | 0.90  |
 | Recall    | 0.93  |
 | F1 Score  | 0.92  |
-
+Logistic Regression and KNN have been added for model comparison.
 ## Contributors
 
 - Nwang Chheten Lama
